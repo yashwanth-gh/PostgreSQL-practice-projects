@@ -1,5 +1,20 @@
 import express from "express";
 import bodyParser from "body-parser";
+import pg from "pg";
+
+const db = new pg.Client({
+  user: "postgres",
+  password: "postgresyash63",
+  host: "localhost",
+  port: 5432,
+  database: "world",
+});
+
+db.connect();
+
+const {rows:quiz} = await db.query("SELECT * FROM flags");
+console.log(quiz);
+db.end();
 
 const app = express();
 const port = 3000;
@@ -24,7 +39,7 @@ app.get("/", (req, res) => {
 app.post("/submit", (req, res) => {
   let answer = req.body.answer.trim();
   let isCorrect = false;
-  if (currentQuestion.capital.toLowerCase() === answer.toLowerCase()) {
+  if (currentQuestion.name.toLowerCase() === answer.toLowerCase()) {
     totalCorrect++;
     console.log(totalCorrect);
     isCorrect = true;
